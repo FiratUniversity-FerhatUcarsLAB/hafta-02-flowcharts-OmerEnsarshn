@@ -2,6 +2,7 @@
 Öğrenci No: 250542022
 
 sistemin kısa açıklaması (maks. 5-6 satır)
+
 Bu sistem, kullanıcıların ATM’den güvenli bir şekilde para çekmesini sağlar.
 Kart takılır ve PIN doğrulaması yapılır; 3 hatalı girişte kart bloke olur.
 Kullanıcı bakiye sorgulayabilir ve çekmek istediği tutarı girer.
