@@ -1,19 +1,25 @@
 BAŞLA
-Sistem durumu kontrol et
+Sistem durumunu kontrol et
 Eğer sistem aktif değilse:
-    Bekle ve tekrar kontrol et
+    Bekle belirli süre
+    Sistemi tekrar kontrol et
 
-Sensör döngüsü başlat:
-    Hareket sensörü oku
-    Kapı/pencere sensörü oku
+Sürekli sensör döngüsü başlat:
+    Hareket sensörünü oku
+    Kapı/Pencere sensörünü oku
 
-    Eğer ihlal tespit edildi:
+    Eğer hareket veya kapı/pencere ihlali tespit edildiyse:
         Eğer ev sahibi evdeyse:
-            Yanlış alarm, bekle ve döngüye devam et
-        Alarm seviyesi belirle (1-düşük, 2-orta, 3-yüksek)
-        Bildirim gönder (SMS + App + Email)
-        Kullanıcı alarmı sıfırlamak ister mi?
-            EVET → alarm sıfırla
-            HAYIR → döngüye devam et
-    Döngü tekrar başa dön
+            Yanlış alarm mesajı göster
+            Döngü başa dön
+        DEĞİLSE:
+            Alarm seviyesi belirle (1-düşük, 2-orta, 3-yüksek)
+            Bildirim gönder (SMS, App, Email)
+            Kullanıcı alarmı sıfırlamak ister mi?
+                EVET → alarm sıfırla
+                        Döngü sona erer (sistem beklemede)
+                HAYIR → döngüye devam et
+    DEĞİLSE:
+        Döngüye devam et (sensörleri tekrar oku)
+
 BİTİR
