@@ -1,0 +1,39 @@
+digraph AkilliEvGuvenlik {
+    rankdir=TB;
+    node [fontname="Arial"];
+
+    start [shape=oval, label="BAŞLA"];
+    sistem_aktif [shape=diamond, label="Sistem aktif mi?"];
+    bekle_tekrar [shape=box, label="Bekle ve tekrar kontrol et"];
+
+    sensor_dongu [shape=box, label="Sensör döngüsü başlat"];
+    hareket_sens [shape=diamond, label="Hareket sensörü ihlali?"];
+    kapi_pencere_sens [shape=diamond, label="Kapı/Pencere sensörü ihlali?"];
+    ev_sahibi [shape=diamond, label="Ev sahibi evde mi?"];
+    alarm_seviyesi [shape=diamond, label="Alarm seviyesi belirle (1-3)"];
+    bildirim [shape=box, label="Bildirim gönder (SMS+App+Email)"];
+    alarm_sifir [shape=diamond, label="Alarm sıfırlansın mı?"];
+    
+    bitir [shape=oval, label="BİTİR"];
+
+    // Oklar
+    start -> sistem_aktif;
+    sistem_aktif -> sensor_dongu [label="EVET"];
+    sistem_aktif -> bekle_tekrar [label="HAYIR"];
+    bekle_tekrar -> sistem_aktif;
+
+    sensor_dongu -> hareket_sens;
+    hareket_sens -> ev_sahibi [label="EVET: ihlal tespit"];
+    hareket_sens -> sensor_dongu [label="HAYIR"];
+
+    kapi_pencere_sens -> ev_sahibi [label="EVET: ihlal tespit"];
+    kapi_pencere_sens -> sensor_dongu [label="HAYIR"];
+
+    ev_sahibi -> sensor_dongu [label="EVET: yanlış alarm, tekrar döngü"];
+    ev_sahibi -> alarm_seviyesi [label="HAYIR"];
+
+    alarm_seviyesi -> bildirim;
+    bildirim -> alarm_sifir;
+    alarm_sifir -> sensor_dongu [label="HAYIR"];
+    alarm_sifir -> bitir [label="EVET"];
+}
