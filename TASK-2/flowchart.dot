@@ -1,0 +1,103 @@
+digraph OnlineAlisverisSepet {
+    rankdir=TB;
+    node [fontname="Arial"];
+
+    // Başla
+    start [shape=oval, label="BAŞLA"];
+
+    // Kullanıcı girişi
+    giris_durum [shape=diamond, label="Kullanıcı girişi doğru mu?"];
+    giris_hata [shape=parallelogram, label="Hatalı giriş, tekrar deneyin"];
+    giris_basari [shape=box, label="Kullanıcı girişi başarılı"];
+
+    // Ürün gezintisi ve ekleme
+    kategori_sec [shape=diamond, label="Kategori geçerli mi?"];
+    urun_listesi [shape=parallelogram, label="Ürün listesi göster"];
+    urun_secim [shape=parallelogram, label="Sepete eklemek istediğiniz ürünü girin"];
+    stok_kontrol [shape=diamond, label="Stokta var mı?"];
+    sepete_ekle [shape=box, label="Ürün sepete eklendi"];
+    stok_yok [shape=parallelogram, label="Üzgünüz, stokta yok"];
+
+    // Sepeti görüntüleme ve düzenleme
+    sepet_duzenle [shape=diamond, label="Ürün çıkarılacak mı?"];
+    urun_cikar [shape=parallelogram, label="Çıkarmak istediğiniz ürünü girin"];
+    devam_et [shape=box, label="Sepet düzenleme tamam"];
+
+    // İndirim kodu uygulama
+    indirim_sor [shape=diamond, label="İndirim kodu var mı?"];
+    kod_gir [shape=parallelogram, label="İndirim kodunu girin"];
+    kod_gecerli [shape=diamond, label="Kod geçerli mi?"];
+    indirim_uygula [shape=box, label="İndirim uygulandı"];
+    kod_gecersiz [shape=parallelogram, label="Geçersiz kod"];
+
+    // Minimum tutar kontrolü
+    minimum_kontrol [shape=diamond, label="Toplam tutar >= 50 TL?"];
+    tutar_yetersiz [shape=parallelogram, label="Minimum sipariş 50 TL, ürün ekleyin"];
+
+    // Kargo ücreti
+    kargo_kontrol [shape=diamond, label="Toplam tutar >= 200 TL?"];
+    kargo_ucret [shape=box, label="Kargo ücreti hesaplandı"];
+
+    // Ödeme yöntemi
+    odeme_secim [shape=diamond, label="Ödeme yöntemi seçildi mi?"];
+    kredi_karti [shape=box, label="Kredi kartı ödeme"];
+    kapida_ode [shape=box, label="Kapıda ödeme"];
+    mobil_ode [shape=box, label="Mobil ödeme"];
+    odeme_iptal [shape=parallelogram, label="Geçersiz seçim, ödeme iptal"];
+
+    // Sipariş onayı
+    siparis_onay [shape=parallelogram, label="Sipariş onaylandı ve toplam tutar gösterildi"];
+
+    // Bitir
+    end [shape=oval, label="BİTİR"];
+
+    // Oklar
+    start -> giris_durum;
+    giris_durum -> giris_basari [label="EVET"];
+    giris_durum -> giris_hata [label="HAYIR"];
+    giris_hata -> giris_durum;
+
+    giris_basari -> kategori_sec;
+    kategori_sec -> urun_listesi [label="EVET"];
+    kategori_sec -> kategori_sec [label="HAYIR"];
+
+    urun_listesi -> urun_secim;
+    urun_secim -> stok_kontrol;
+    stok_kontrol -> sepete_ekle [label="EVET"];
+    stok_kontrol -> stok_yok [label="HAYIR"];
+    sepete_ekle -> sepet_duzenle;
+    stok_yok -> sepet_duzenle;
+
+    sepet_duzenle -> urun_cikar [label="EVET"];
+    urun_cikar -> sepet_duzenle;
+    sepet_duzenle -> devam_et [label="HAYIR"];
+
+    devam_et -> indirim_sor;
+    indirim_sor -> kod_gir [label="EVET"];
+    indirim_sor -> minimum_kontrol [label="HAYIR"];
+    kod_gir -> kod_gecerli;
+    kod_gecerli -> indirim_uygula [label="EVET"];
+    kod_gecerli -> kod_gecersiz [label="HAYIR"];
+    indirim_uygula -> minimum_kontrol;
+    kod_gecersiz -> minimum_kontrol;
+
+    minimum_kontrol -> kargo_kontrol [label="EVET"];
+    minimum_kontrol -> tutar_yetersiz [label="HAYIR"];
+    tutar_yetersiz -> end;
+
+    kargo_kontrol -> kargo_ucret [label="HAYIR"];
+    kargo_kontrol -> kargo_ucret [label="EVET"];
+
+    kargo_ucret -> odeme_secim;
+    odeme_secim -> kredi_karti [label="1"];
+    odeme_secim -> kapida_ode [label="2"];
+    odeme_secim -> mobil_ode [label="3"];
+    odeme_secim -> odeme_iptal [label="Geçersiz"];
+
+    kredi_karti -> siparis_onay;
+    kapida_ode -> siparis_onay;
+    mobil_ode -> siparis_onay;
+    odeme_iptal -> end;
+
+    siparis_onay -> end;
+}
