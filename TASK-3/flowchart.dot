@@ -1,0 +1,68 @@
+digraph HastaneRandevuTahlil {
+    rankdir=TB;
+    node [fontname="Arial"];
+
+    // Başla
+    start [shape=oval, label="BAŞLA"];
+
+    // Hasta kimlik doğrulama
+    kimlik_dogrula [shape=diamond, label="TC No doğrulandı mı?"];
+    kimlik_hata [shape=parallelogram, label="Hatalı TC No, tekrar deneyin"];
+    kimlik_basari [shape=box, label="Kimlik doğrulama başarılı"];
+
+    // Ana işlem
+    islem_secim [shape=diamond, label="İşlem seç: 1-Randevu, 2-Tahlil"];
+    secim_hata [shape=parallelogram, label="Geçersiz seçim"];
+
+    // Randevu modülü
+    poliklinik_sec [shape=parallelogram, label="Poliklinik seç"];
+    doktor_sec [shape=parallelogram, label="Doktor seç"];
+    saat_sec [shape=parallelogram, label="Saat seç"];
+    randevu_onay [shape=box, label="Randevu onaylandı"];
+    sms_gonder [shape=box, label="SMS gönder"];
+
+    // Tahlil modülü
+    tahlil_var [shape=diamond, label="Tahlil var mı?"];
+    sonuc_hazir [shape=diamond, label="Sonuç hazır mı?"];
+    tahlil_gor [shape=parallelogram, label="Tahlil sonucu göster"];
+    pdf_sor [shape=diamond, label="PDF indirmek ister misiniz?"];
+    pdf_indir [shape=box, label="PDF indir"];
+    sonuc_bekle [shape=parallelogram, label="Sonuç hazır değil, daha sonra tekrar kontrol edin"];
+
+    // Başka işlem
+    baska_islem [shape=diamond, label="Başka işlem yapmak ister misiniz?"];
+    devam_et [shape=box, label="Ana döngü devam"];
+    bitir [shape=oval, label="BİTİR"];
+
+    // Oklar
+    start -> kimlik_dogrula;
+    kimlik_dogrula -> kimlik_basari [label="EVET"];
+    kimlik_dogrula -> kimlik_hata [label="HAYIR"];
+    kimlik_hata -> kimlik_dogrula;
+
+    kimlik_basari -> islem_secim;
+    islem_secim -> poliklinik_sec [label="1-Randevu"];
+    islem_secim -> tahlil_var [label="2-Tahlil"];
+    islem_secim -> secim_hata [label="Diğer"];
+    secim_hata -> islem_secim;
+
+    // Randevu akışı
+    poliklinik_sec -> doktor_sec;
+    doktor_sec -> saat_sec;
+    saat_sec -> randevu_onay;
+    randevu_onay -> sms_gonder;
+    sms_gonder -> baska_islem;
+
+    // Tahlil akışı
+    tahlil_var -> sonuc_hazir [label="EVET"];
+    tahlil_var -> sonuc_bekle [label="HAYIR"];
+    sonuc_hazir -> tahlil_gor [label="EVET"];
+    tahlil_gor -> pdf_sor;
+    pdf_sor -> pdf_indir [label="EVET"];
+    pdf_sor -> baska_islem [label="HAYIR"];
+    sonuc_bekle -> baska_islem;
+
+    // Başka işlem döngüsü
+    baska_islem -> islem_secim [label="EVET"];
+    baska_islem -> bitir [label="HAYIR"];
+}
