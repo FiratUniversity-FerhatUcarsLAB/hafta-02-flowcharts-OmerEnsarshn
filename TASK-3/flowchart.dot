@@ -28,10 +28,10 @@ digraph HastaneRandevuTahlil {
     pdf_sor [shape=diamond, label="PDF indirmek ister misiniz?"];
     pdf_indir [shape=box, label="PDF indir"];
     sonuc_bekle [shape=parallelogram, label="Sonuç hazır değil, daha sonra tekrar kontrol edin"];
+    sonuc_yok [shape=parallelogram, label="Tahlil bulunamadı"];
 
     // Başka işlem
     baska_islem [shape=diamond, label="Başka işlem yapmak ister misiniz?"];
-    devam_et [shape=box, label="Ana döngü devam"];
     bitir [shape=oval, label="BİTİR"];
 
     // Oklar
@@ -55,12 +55,15 @@ digraph HastaneRandevuTahlil {
 
     // Tahlil akışı
     tahlil_var -> sonuc_hazir [label="EVET"];
-    tahlil_var -> sonuc_bekle [label="HAYIR"];
+    tahlil_var -> sonuc_yok [label="HAYIR"];
     sonuc_hazir -> tahlil_gor [label="EVET"];
     tahlil_gor -> pdf_sor;
     pdf_sor -> pdf_indir [label="EVET"];
     pdf_sor -> baska_islem [label="HAYIR"];
+    pdf_indir -> baska_islem;
+    sonuc_hazir -> sonuc_bekle [label="HAYIR"];
     sonuc_bekle -> baska_islem;
+    sonuc_yok -> baska_islem;
 
     // Başka işlem döngüsü
     baska_islem -> islem_secim [label="EVET"];
