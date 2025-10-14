@@ -1,0 +1,79 @@
+digraph ATM_ParaCekme {
+    node [fontname="Arial"];
+    
+    // Başla
+    start [shape=oval, label="BAŞLA"];
+
+    // Kart takıldı mı?
+    kart [shape=diamond, label="Kart takıldı mı?"];
+
+    // Kart takılmadıysa
+    kart_hata [shape=parallelogram, label="Lütfen kartınızı takınız"];
+    
+    // PIN doğrulama
+    pin_dongu [shape=diamond, label="PIN doğru mu?"];
+    pin_hata [shape=box, label="Hatalı PIN, hak -=1"];
+    kart_blok [shape=box, label="Kart bloke edildi"];
+    pin_basari [shape=box, label="Oturum açıldı"];
+    
+    // Ana menü
+    menu [shape=diamond, label="1:Bakiye 2:Para çek 3:İşlemi sonlandır"];
+
+    bakiye_sorgu [shape=parallelogram, label="Mevcut bakiye göster"];
+    
+    // Para çekme işlemleri
+    tutar_giris [shape=parallelogram, label="Çekmek istediğiniz tutarı girin"];
+    tutar_kontrol1 [shape=diamond, label="Tutar > 0?"];
+    tutar_kontrol2 [shape=diamond, label="20 TL katı mı?"];
+    tutar_kontrol3 [shape=diamond, label="Günlük limit aşımı?"];
+    tutar_kontrol4 [shape=diamond, label="Bakiye yeterli mi?"];
+    tutar_kontrol5 [shape=diamond, label="ATM nakit yeterli mi?"];
+    
+    para_ver [shape=box, label="Para verildi, fiş yazdırıldı"];
+    tekrar_soru [shape=diamond, label="Başka işlem yapmak ister misiniz?"];
+    oturum_son [shape=box, label="Oturum sonlandırıldı, kart iade edildi"];
+
+    // Bitir
+    end [shape=oval, label="BİTİR"];
+
+    // Oklar
+    start -> kart;
+    kart -> kart_hata [label="Hayır"];
+    kart -> pin_dongu [label="Evet"];
+    kart_hata -> kart;
+
+    pin_dongu -> pin_basari [label="Evet"];
+    pin_dongu -> pin_hata [label="Hayır"];
+    pin_hata -> pin_dongu [label="Hak kaldı?"];
+    pin_hata -> kart_blok [label="Hak bitti"];
+    kart_blok -> end;
+
+    pin_basari -> menu;
+
+    menu -> bakiye_sorgu [label="1"];
+    bakiye_sorgu -> menu;
+
+    menu -> tutar_giris [label="2"];
+    tutar_giris -> tutar_kontrol1;
+    tutar_kontrol1 -> tutar_kontrol2 [label="Evet"];
+    tutar_kontrol1 -> tutar_giris [label="Hayır"];
+
+    tutar_kontrol2 -> tutar_kontrol3 [label="Evet"];
+    tutar_kontrol2 -> tutar_giris [label="Hayır"];
+
+    tutar_kontrol3 -> tutar_kontrol4 [label="Hayır"];
+    tutar_kontrol3 -> tutar_giris [label="Evet"];
+
+    tutar_kontrol4 -> tutar_kontrol5 [label="Evet"];
+    tutar_kontrol4 -> tutar_giris [label="Hayır"];
+
+    tutar_kontrol5 -> para_ver [label="Evet"];
+    tutar_kontrol5 -> tutar_giris [label="Hayır"];
+
+    para_ver -> tekrar_soru;
+    tekrar_soru -> menu [label="Evet"];
+    tekrar_soru -> oturum_son [label="Hayır"];
+    oturum_son -> end;
+
+    menu -> oturum_son [label="3"];
+}
