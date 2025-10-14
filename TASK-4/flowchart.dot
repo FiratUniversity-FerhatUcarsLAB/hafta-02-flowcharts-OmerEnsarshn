@@ -1,1 +1,49 @@
+digraph UniversiteDersKayit {
+    rankdir=TB;
+    node [fontname="Arial"];
+
+    start [shape=oval, label="BAŞLA"];
+    ogrenci_giris [shape=box, label="Öğrenci girişi (No + Şifre)"];
+    ders_listesi [shape=box, label="Ders listesini görüntüle"];
+    ders_secim [shape=diamond, label="Ders seçildi mi?"];
+    
+    kontenjan_kontrol [shape=diamond, label="Kontenjan var mı?"];
+    onkosul_kontrol [shape=diamond, label="Ön koşul dersleri tamam mı?"];
+    zaman_cakisma [shape=diamond, label="Zaman çakışması var mı?"];
+    kredi_limit [shape=diamond, label="Toplam kredi ≤ 35?"];
+    danisman_onay [shape=diamond, label="GPA < 2.5 ve danışman onayı gerekli?"];
+    
+    ders_ekle [shape=box, label="Ders ekle/çıkar"];
+    kayit_ozeti [shape=parallelogram, label="Kayıt özeti göster"];
+    bitir [shape=oval, label="BİTİR"];
+
+    baska_ders [shape=diamond, label="Başka ders eklemek ister misiniz?"];
+
+    // Oklar
+    start -> ogrenci_giris -> ders_listesi -> ders_secim;
+
+    ders_secim -> kontenjan_kontrol [label="EVET"];
+    ders_secim -> bitir [label="HAYIR"];
+
+    kontenjan_kontrol -> onkosul_kontrol [label="EVET"];
+    kontenjan_kontrol -> ders_listesi [label="HAYIR"];
+
+    onkosul_kontrol -> zaman_cakisma [label="EVET"];
+    onkosul_kontrol -> ders_listesi [label="HAYIR"];
+
+    zaman_cakisma -> kredi_limit [label="HAYIR"];
+    zaman_cakisma -> ders_listesi [label="EVET"];
+
+    kredi_limit -> danisman_onay [label="EVET"];
+    kredi_limit -> ders_listesi [label="HAYIR"];
+
+    danisman_onay -> ders_ekle [label="EVET"];
+    danisman_onay -> ders_listesi [label="HAYIR"];
+
+    ders_ekle -> baska_ders;
+    baska_ders -> ders_listesi [label="EVET"];
+    baska_ders -> kayit_ozeti [label="HAYIR"];
+
+    kayit_ozeti -> bitir;
+}
 
